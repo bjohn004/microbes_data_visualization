@@ -1,5 +1,71 @@
+// This code was inspired by the Tutorials provided by Dom in class/office hours on 9/27/2022
+
+function drawBarGraph(sampleId)
+{
+
+    console.log(`drawBarGraph(${sampleId})`);
+
+};
+
+function drawBubbleChart(sampleId)
+{
+
+    console.log(`drawBubbleChart(${sampleId})`);
+
+};
+
+function drawGauge(sampleId)
+{
+    console.log(`drawGauge(${sampleId})`);
+}
+
+function showMetaData(sampleId)
+{
+
+    console.log(`showMetaData(${sampleId})`);
+
+};
+
+function InitDashboard()
+{
+    console.log("InitDashboard")
+
+    // Get a handle to the dropdown
+    let selector = d3.select("#selDataset")
+    let sample = "https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json"
+
+    d3.json(sample).then(function(data) {
+        console.log("Here's the data", data);
+
+        let sampleNames = data.names;
+        console.log(sampleNames);
+        // populate dropdown
+        for (let i = 0; sampleNames.length; i++) {
+            let sampleId = sampleNames[i];
+            console.log(`sampleId = ${sampleId}`);
+            selector.append("option").text(sampleId).property("value", sampleId);
+        };
+        // Read current value from dropdown
+        let initialId = selector.property("value");
+        console.log(`initialId = ${initialId}`);
+        // draw bargraph from selected value
+        drawBarGraph(initialId);
+        // draw bubblechart for selected sample id
+        drawBubbleChart(initialId);
+        // show metadata for selected sample id
+        showMetaData(initialId);
+
+
+
+    });
+
+}
+
+
+// ----------------------------------------------------------------------------------------------------
+
 console.log("Assignment 14") 
-sample = "https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json"
+let sample = "https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json"
 
 d3.json(sample).then(function(data) {
     let dataSamples = Object.values(data.samples);
@@ -12,7 +78,11 @@ d3.json(sample).then(function(data) {
         let item = dataSamples[i];
         let z = idNumber.push(item.id);
         let y = otuIDList.push(item.otu_ids);
-        let x = sampleValues.push(item.sample_values);
+        let x = sampleValues.push(item.sample_values);   
+    };
+    console.log("ids", idNumber);
+    console.log("otus", otuIDList);
+    console.log("samples", sampleValues);
     function init() {
         let data = [{
             x: x[0],
@@ -21,27 +91,40 @@ d3.json(sample).then(function(data) {
             name: "Top 10 Biomes Per Patient",
             type: "bar",
             orientation: "h"
-        }]
+        }];
 
         let layout = {
             height: 600,
             width: 800
         };
 
-        Plotly.newPlot("plot", data, layout)
+        Plotly.newPlot("bar", data, layout)
         
-    }
+    };
+    // On change to the DOM, call getData()
+    d3.selectAll("#selDataset").on("change", getData);
 
+    // Function called by DOM changes
     function getData() {
         let dropdownMenu = d3.select("#selDataset");
-
+        // Assign the value of the dropdown menu option to a letiable
         let dataset = dropdownMenu.property("value");
-        
-    }
+        // Initialize an empty array for the country's data
+        let data = [];
 
-    console.log("ids", idNumber)
-    console.log("otus", otuIDList)
-    console.log("samples", sampleValues)
+        for (i = 0; i < dataSamples.length; i++) {
+
+            if (dataset == z[0]) {
+                data = australia;
+            }
+            else if (dataset == 'brazil') {
+                data = brazil;
+            }   
+   
+    // Call function to update the chart
+    updatePlotly(data);
+        };
+    };
 });
 
 // // horizontal bar chart
