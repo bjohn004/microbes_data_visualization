@@ -1,12 +1,13 @@
-// // This code was inspired by the Tutorials provided by Dom in class/office hours on 9/27/2022
+// **** This code was inspired by the Tutorials provided by Dom in class/office hours on 9/27/2022 ****
 // //Define global variable
 const url = "https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json"
 
+//--- BAR GRAPH FUNCTION START-----------
 function drawBarGraph(sampleId)
 {
-
+    // console.log to test
     console.log(`drawBarGraph(${sampleId})`);
-
+    // evaluate json for results
     d3.json(url).then(data => {
         console.log(data);
         let samples = data.samples;
@@ -15,7 +16,7 @@ function drawBarGraph(sampleId)
         let otu_ids = result.otu_ids;
         let otu_labels = result.otu_labels;
         let sample_values = result.sample_values;
-
+        // set up y ticks
         let yticks = otu_ids.slice(0,10).map(otuId => `OTU ${otuId}`).reverse();
         // Create trace object
         let barData = {
@@ -34,24 +35,24 @@ function drawBarGraph(sampleId)
         }
         // call plotly function
         Plotly.newPlot("bar", barArray, barLayout)
-
-
     });
-
 }
+//--- BAR GRAPH FUNCTION END-----------
 
+//--- BUBBLE CHART FUNCTION START-----------
 function drawBubbleChart(sampleId)
 {
-
+    // consoloe.log to test
     console.log(`drawBubbleChart(${sampleId})`);
+    // evaluate json for results
     d3.json(url).then(data => {
         let samples = data.samples;
         let resultArray = samples.filter(s => s.id == sampleId);
         let result = resultArray[0];
         let otu_ids = result.otu_ids;
         let otu_labels = result.otu_labels;
-        let sample_values = result.sample_vaules;
-    // Create trace object
+        let sample_values = result.sample_values;
+        // Create trace object
         let bubbleData = {
             x: otu_ids,
             y: sample_values,
@@ -61,9 +62,7 @@ function drawBubbleChart(sampleId)
                 size: sample_values,
                 color: otu_ids,
                 colorscale: "earth"
-            }
-            
-
+            }            
         };
         // put trace object into an array
         let bubbleArray = [bubbleData];
@@ -73,28 +72,41 @@ function drawBubbleChart(sampleId)
             margin: {t: 30},
             hovermode: "closest",
             xaxis: { title: "OTU ID"}
-
         }
         // call plotly function
         Plotly.newPlot("bubble", bubbleArray, bubbleLayout)
     })
+}
+//--- BUBBLE CHART FUNCTION END-----------
 
-
+//--- SHOW METADATA FUNCTION START-----------
+function showMetaData(sampleId)
+{
+    d3.json(url).then(data => {
+        let samples = data.metadata;
+        let resultArray = samples.filter(s => s.id == sampleId);
+        let result = resultArray[0];
+        let id = result.id;
+        let ethnicity = result.ethnicity;
+        let gender = result.gender;
+        let age = result.age;
+        let location = result.location;
+        let bbtype = result.bbtype;
+        let wfreq = result.wfreq;
+    })
+    console.log(`showMetaData(${sampleId})`);
 
 }
+//--- SHOW METADATA FUNCTION END-----------
 
+//--- GAUGE FUNCTION START-----------
 function drawGauge(sampleId)
 {
     console.log(`drawGauge(${sampleId})`);
 }
+//--- GAUGE FUNCTION END-----------
 
-function showMetaData(sampleId)
-{
-
-    console.log(`showMetaData(${sampleId})`);
-
-}
-
+//--- CHANGING VALUE FUNCTION START -----------
 function optionChanged(sampleId)
 {
     console.log(`optionChanged, new value: ${sampleId}`);
@@ -104,7 +116,9 @@ function optionChanged(sampleId)
     showMetaData(sampleId);
     drawGauge(sampleId);
 }
+//--- CHANGING VALUE FUNCTION START -----------
 
+//--- DASHBOARD FUNCTION START -----------
 function InitDashboard()
 {
     console.log("InitDashboard")
@@ -132,14 +146,18 @@ function InitDashboard()
         drawBubbleChart(initialId);
         // show metadata for selected sample id
         showMetaData(initialId);
-
-
-
     });
 
 }
+//--- DASHBOARD FUNCTION END -----------
 
+// Call Dashboard Function
 InitDashboard()
+
+
+
+
+
 // ----------------------------------------------------------------------------------------------------
 
 // console.log("Assignment 14") 
