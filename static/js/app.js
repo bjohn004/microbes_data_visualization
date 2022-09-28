@@ -1,5 +1,5 @@
-// This code was inspired by the Tutorials provided by Dom in class/office hours on 9/27/2022
-//Define global variable
+// // This code was inspired by the Tutorials provided by Dom in class/office hours on 9/27/2022
+// //Define global variable
 const url = "https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json"
 
 function drawBarGraph(sampleId)
@@ -111,15 +111,14 @@ function InitDashboard()
 
     // Get a handle to the dropdown
     let selector = d3.select("#selDataset")
-    let url = "https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json"
-
+   
     d3.json(url).then(function(data) {
         console.log("Here's the data", data);
 
         let sampleNames = data.names;
         console.log(sampleNames);
         // populate dropdown
-        for (let i = 0; sampleNames.length; i++) {
+        for (let i = 0; i < sampleNames.length; i++) {
             let sampleId = sampleNames[i];
             console.log(`sampleId = ${sampleId}`);
             selector.append("option").text(sampleId).property("value", sampleId);
