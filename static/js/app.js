@@ -7,7 +7,7 @@ function drawBarGraph(sampleId)
 {
     // console.log to test
     console.log(`drawBarGraph(${sampleId})`);
-    // evaluate json for results
+    // run d3 on json to get data and analyze
     d3.json(url).then(data => {
         console.log(data);
         let samples = data.samples;
@@ -25,7 +25,6 @@ function drawBarGraph(sampleId)
             type: "bar",
             text: otu_labels.slice(0,10).reverse(),
             orientation: "h"
-
         };
         // put trace object into an array
         let barArray = [barData];
@@ -44,7 +43,7 @@ function drawBubbleChart(sampleId)
 {
     // consoloe.log to test
     console.log(`drawBubbleChart(${sampleId})`);
-    // evaluate json for results
+    // run d3 on json to get data and analyze
     d3.json(url).then(data => {
         let samples = data.samples;
         let resultArray = samples.filter(s => s.id == sampleId);
@@ -85,7 +84,7 @@ function showMetaData(sampleId)
     // consoloe.log to test
     console.log(`showMetaData(${sampleId})`);
     let metaData = d3.select("#sample-metadata")
-    // let selector = d3.select("#sample-metadata")
+    // run d3 on json to get data and analyze
     d3.json(url).then(data => {
         let samples = data.metadata;
         let resultArray = samples.filter(s => s.id == sampleId);
@@ -106,15 +105,55 @@ function showMetaData(sampleId)
         metaData.append("li").text(`wfreq: ${wfreq}`)     
         d3.selectAll("li").style("list-style-type", "none")
     })
-    
-
 }
 //--- SHOW METADATA FUNCTION END-----------
 
 //--- GAUGE FUNCTION START-----------
 function drawGauge(sampleId)
 {
+    // consoloe.log to test
     console.log(`drawGauge(${sampleId})`);
+    // run d3 on json to get data and analyze
+    d3.json(url).then(data => {
+        let samples = data.metadata;
+        let resultArray = samples.filter(s => s.id == sampleId);
+        let result = resultArray[0];
+        let id = result.id;
+        let wfreq = result.wfreq;
+        let gaugeData = {
+           type: "indicator",
+           mode: "gauge+number",
+           value: wfreq,
+           title: {text: "Belly Button Washing Frequency", font: {size: 18} },   
+               
+           gauge: {
+            bgcolor: "black",
+            bordercolor: "black",
+            color: {gradient: true, ranges: {"tan": [0,3], "yellow":[3-6], "green":[6-9]}},
+            bar: { color: "lightblue", thickness: 0.25, line: {color: "blue", width: 1}},
+            axis: {range: [null, 9], dtick: 1, showticklabels: true },
+            steps: [ 
+                { range: [0,1], color: 'rgb(200,200,200'},
+                { range: [1,2], color: 'rgb(175,175,175)'},
+                { range: [2,3], color: 'rgb(150,150,150)'},
+                { range: [3,4], color: 'rgb(125,125,125)'},
+                { range: [4,5], color: 'rgb(120,120,120)'},
+                { range: [5,6], color: 'rgb(115,115,115)'},
+                { range: [6,7], color: 'rgb(100,100,100)'},
+                { range: [7,8], color: 'rgb(85,85,85)'},
+                { range: [8,9], color: 'rgb(75,75,75)'},
+                
+            ]
+           }
+        };
+        let gaugeArray = [gaugeData];
+        let gaugeLayout = {
+            width: 600,
+            height: 450,
+            margin: { t: 0, b: 0}
+        };
+        Plotly.newPlot("gauge", gaugeArray, gaugeLayout);
+    });
 }
 //--- GAUGE FUNCTION END-----------
 
@@ -156,79 +195,12 @@ function InitDashboard()
         drawBubbleChart(initialId);
         // show metadata for selected sample id
         showMetaData(initialId);
+        // show gauge plot from selected value
+        drawGauge(initialId);
     });
-
 }
 //--- DASHBOARD FUNCTION END -----------
 
 // Call Dashboard Function
 InitDashboard()
 
-
-
-
-
-// ----------------------------------------------------------------------------------------------------
-
-// console.log("Assignment 14") 
-// let sample = "https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json"
-
-// d3.json(sample).then(function(data) {
-//     let dataSamples = Object.values(data.samples);
-//     console.log(dataSamples);
-//     let idNumber =[]
-//     let otuIDList = [];
-//     let sampleValues = [];
-
-//     for (i = 0; i < dataSamples.length; i++) {
-//         let item = dataSamples[i];
-//         let z = idNumber.push(item.id);
-//         let y = otuIDList.push(item.otu_ids);
-//         let x = sampleValues.push(item.sample_values);   
-//     };
-//     console.log("ids", idNumber);
-//     console.log("otus", otuIDList);
-//     console.log("samples", sampleValues);
-//     function init() {
-//         let data = [{
-//             x: x[0],
-//             y: y[0],
-//             text: z[0],
-//             name: "Top 10 Biomes Per Patient",
-//             type: "bar",
-//             orientation: "h"
-//         }];
-
-//         let layout = {
-//             height: 600,
-//             width: 800
-//         };
-
-//         Plotly.newPlot("bar", data, layout)
-        
-//     };
-//     // On change to the DOM, call getData()
-//     d3.selectAll("#selDataset").on("change", getData);
-
-//     // Function called by DOM changes
-//     function getData() {
-//         let dropdownMenu = d3.select("#selDataset");
-//         // Assign the value of the dropdown menu option to a letiable
-//         let dataset = dropdownMenu.property("value");
-//         // Initialize an empty array for the country's data
-//         let data = [];
-
-//         for (i = 0; i < dataSamples.length; i++) {
-
-//             if (dataset == z[0]) {
-//                 data = australia;
-//             }
-//             else if (dataset == 'brazil') {
-//                 data = brazil;
-//             }   
-   
-//     // Call function to update the chart
-//     updatePlotly(data);
-//         };
-//     };
-// });
