@@ -1,6 +1,6 @@
-# microbes_data_visualization
 
-This repo contains the contents for homework assignment 14 for the U of M Data Analytics Bootcamp.
+This repo contains the contents for creating a dashboard displaying the results from a JSON dataset summarizing findings from a microbe study.
+
 ***
 ## Introduction
 This repo includes a web page that utilizes data from a json to create a dashboard. The dashboard allows you to select one of many different patients from a microbe study. The dashboard displays the following: 
